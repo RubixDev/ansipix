@@ -4,6 +4,16 @@ use image::{imageops::FilterType, ImageResult, GenericImageView};
 const TOP_HALF:    &str = "\u{2580}";
 const BOTTOM_HALF: &str = "\u{2584}";
 
+/// Open an image and convert it to a `String`, with [ANSI escape sequences](https://en.wikipedia.org/wiki/ANSI_escape_code) for color
+///
+/// ## Params
+/// - `file: std::path::PathBuf` - The path to the image
+/// - `size: (usize, usize)` - The maximum size of the resized image in `(width, height)` notation
+/// - `alpha_threshold: u8` - Minimum alpha value of a pixel for it to be shown. `0` for no transparent background
+/// - `resize_filter: image::imageops::FilterType` - The filter to be used for resizing the image
+///
+/// ## Returns
+/// A `String` with the image when the specified `file` could be opened as an image, otherwise an `image::error::ImageError`
 pub fn of_image_with_filter(file: PathBuf, size: (usize, usize), alpha_threshold: u8, resize_filter: FilterType) -> ImageResult<String> {
     let img = image::open(&file)?;
     let mut pixels: Vec<Vec<[u8; 4]>> = vec![];
@@ -40,6 +50,15 @@ pub fn of_image_with_filter(file: PathBuf, size: (usize, usize), alpha_threshold
     return Ok(out);
 }
 
+/// Open an image and convert it to a `String`, with [ANSI escape sequences](https://en.wikipedia.org/wiki/ANSI_escape_code) for color
+///
+/// ## Params
+/// - `file: std::path::PathBuf` - The path to the image
+/// - `size: (usize, usize)` - The maximum size of the resized image in `(width, height)` notation
+/// - `alpha_threshold: u8` - Minimum alpha value of a pixel for it to be shown. `0` for no transparent background
+///
+/// ## Returns
+/// A `String` with the image when the specified `file` could be opened as an image, otherwise an `image::error::ImageError`
 pub fn of_image(file: PathBuf, size: (usize, usize), alpha_threshold: u8) -> ImageResult<String> {
     of_image_with_filter(file, size, alpha_threshold, FilterType::Nearest)
 }
