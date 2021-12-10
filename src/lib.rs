@@ -4,7 +4,7 @@ use image::{imageops::FilterType, ImageResult, GenericImageView};
 const TOP_HALF:    &str = "\u{2580}";
 const BOTTOM_HALF: &str = "\u{2584}";
 
-/// Open an image and convert it to a `String`, with [ANSI escape sequences](https://en.wikipedia.org/wiki/ANSI_escape_code) for color
+/// Open an image and convert it to a `String`, with [ANSI escape sequences](https://en.wikipedia.org/wiki/ANSI_escape_code) for color, while specifying a filter for resizing
 ///
 /// ## Params
 /// - `file: std::path::PathBuf` - The path to the image
