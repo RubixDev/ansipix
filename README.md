@@ -15,10 +15,10 @@ use ansipix::of_image;
 
 let img = of_image(PathBuf::from("path/to/image"), (50, 50), 100, false);
 ```
-Refer to the doc comments for more information about the parameters.
+Refer to the [docs](https://docs.rs/ansipix/0.1.0/ansipix/) for more information about the parameters.
 
 ### Specify a different filter type
-`ansipix` uses the `image` crate for opening and resizing the image. The `of_image` function uses `FilterType::Nearest` for resizing. To specify a different one use `of_image_with_filter`:
+`ansipix` uses the `image` crate for opening and resizing the image. The `of_image` function uses `FilterType::Nearest` for resizing. To specify a different one, add the `image` crate to your dependencies and use `of_image_with_filter`:
 ```rust
 use std::path::PathBuf;
 use image::imageops::FilterType;
