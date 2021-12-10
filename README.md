@@ -30,7 +30,7 @@ let img = of_image_with_filter(PathBuf::from("path/to/image"), (32, 32), 255, Fi
 ### Print Image to the Terminal
 ```rust
 println!("{}", img.unwrap_or_else(|e| {
-    println!("Error while opening the file: {}", e);
+    eprintln!("Error while opening the file: {}", e);
     std::process::exit(1);
 }));
 ```
