@@ -11,9 +11,8 @@ ansipix = "0.1.0"
 ### Get an ANSI string
 ```rust
 use std::path::PathBuf;
-use ansipix::of_image;
 
-let img = of_image(PathBuf::from("path/to/image"), (50, 50), 100, false);
+let img = ansipix::of_image(PathBuf::from("path/to/image"), (50, 50), 100, false);
 ```
 Refer to the [docs](https://docs.rs/ansipix/0.1.0/ansipix/) for more information about the parameters.
 
@@ -22,9 +21,8 @@ Refer to the [docs](https://docs.rs/ansipix/0.1.0/ansipix/) for more information
 ```rust
 use std::path::PathBuf;
 use image::imageops::FilterType;
-use ansipix::of_image_with_filter;
 
-let img = of_image_with_filter(PathBuf::from("path/to/image"), (32, 32), 255, false, FilterType::Triangle);
+let img = ansipix::of_image_with_filter(PathBuf::from("path/to/image"), (32, 32), 255, false, FilterType::Triangle);
 ```
 
 ### Print Image to the Terminal
