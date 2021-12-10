@@ -10,11 +10,14 @@ const BOTTOM_HALF: &str = "\u{2584}";
 /// - `file: std::path::PathBuf` - The path to the image
 /// - `size: (usize, usize)` - The maximum size of the resized image in `(width, height)` notation
 /// - `alpha_threshold: u8` - Minimum alpha value of a pixel for it to be shown. `0` for no transparent background
+/// - `raw: bool` - Whether to print the escape sequences literal
 /// - `resize_filter: image::imageops::FilterType` - The filter to be used for resizing the image
 ///
 /// ## Returns
 /// A `String` with the image when the specified `file` could be opened as an image, otherwise an `image::error::ImageError`
-pub fn of_image_with_filter(file: PathBuf, size: (usize, usize), alpha_threshold: u8, resize_filter: FilterType) -> ImageResult<String> {
+pub fn of_image_with_filter(file: PathBuf, size: (usize, usize), alpha_threshold: u8, raw: bool, resize_filter: FilterType) -> ImageResult<String> {
+    let esc = if raw { "\\x1b" } else { "\x1b" };
+
     let img = image::open(&file)?;
     let mut pixels: Vec<Vec<[u8; 4]>> = vec![];
     for (x, y, pix) in img.resize(size.0 as u32, size.1 as u32, resize_filter).pixels() {
@@ -33,15 +36,17 @@ pub fn of_image_with_filter(file: PathBuf, size: (usize, usize), alpha_threshold
             if top_invis && bot_invis {
                 out += " ";
             } else if top_invis && !bot_invis {
-                out += format!("\x1b[38;2;{};{};{}m{}\x1b[0m", bot_pix[0], bot_pix[1], bot_pix[2], BOTTOM_HALF).as_str();
+                out += format!("{}[38;2;{};{};{}m{}{}[0m", esc, bot_pix[0], bot_pix[1], bot_pix[2], BOTTOM_HALF, esc).as_str();
             } else if !top_invis && bot_invis {
-                out += format!("\x1b[38;2;{};{};{}m{}\x1b[0m", top_pix[0], top_pix[1], top_pix[2], TOP_HALF).as_str();
+                out += format!("{}[38;2;{};{};{}m{}{}[0m", esc, top_pix[0], top_pix[1], top_pix[2], TOP_HALF, esc).as_str();
             } else {
                 out += format!(
-                    "\x1b[38;2;{};{};{};48;2;{};{};{}m{}\x1b[0m",
+                    "{}[38;2;{};{};{};48;2;{};{};{}m{}{}[0m",
+                    esc,
                     bot_pix[0], bot_pix[1], bot_pix[2],
                     top_pix[0], top_pix[1], top_pix[2],
-                    BOTTOM_HALF
+                    BOTTOM_HALF,
+                    esc
                 ).as_str();
             }
         }
@@ -56,11 +61,12 @@ pub fn of_image_with_filter(file: PathBuf, size: (usize, usize), alpha_threshold
 /// - `file: std::path::PathBuf` - The path to the image
 /// - `size: (usize, usize)` - The maximum size of the resized image in `(width, height)` notation
 /// - `alpha_threshold: u8` - Minimum alpha value of a pixel for it to be shown. `0` for no transparent background
+/// - `raw: bool` - Whether to print the escape sequences literal
 ///
 /// ## Returns
 /// A `String` with the image when the specified `file` could be opened as an image, otherwise an `image::error::ImageError`
-pub fn of_image(file: PathBuf, size: (usize, usize), alpha_threshold: u8) -> ImageResult<String> {
-    of_image_with_filter(file, size, alpha_threshold, FilterType::Nearest)
+pub fn of_image(file: PathBuf, size: (usize, usize), alpha_threshold: u8, raw: bool) -> ImageResult<String> {
+    of_image_with_filter(file, size, alpha_threshold, raw, FilterType::Nearest)
 }
 
 #[cfg(test)]
