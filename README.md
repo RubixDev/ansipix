@@ -1,5 +1,5 @@
 # ansipix
-A rust library for reading images as ANSI strings to print in a terminal
+A rust library for converting images to ANSI strings to print in a terminal
 
 ## Usage
 ### Add as dependency
