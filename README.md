@@ -13,7 +13,7 @@ ansipix = "0.1.0"
 use std::path::PathBuf;
 use ansipix::of_image;
 
-let img = of_image(PathBuf::from("path/to/image"), (50, 50), 100);
+let img = of_image(PathBuf::from("path/to/image"), (50, 50), 100, false);
 ```
 Refer to the doc comments for more information about the parameters.
 
@@ -24,7 +24,7 @@ use std::path::PathBuf;
 use image::imageops::FilterType;
 use ansipix::of_image_with_filter;
 
-let img = of_image_with_filter(PathBuf::from("path/to/image"), (32, 32), 255, FilterType::Triangle);
+let img = of_image_with_filter(PathBuf::from("path/to/image"), (32, 32), 255, false, FilterType::Triangle);
 ```
 
 ### Print Image to the Terminal
