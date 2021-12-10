@@ -5,7 +5,7 @@ A rust library for converting images to ANSI strings to print in a terminal
 ### Add as dependency
 Add the following to your `Cargo.toml`
 ```toml
-ansipix = "0.1.0"
+ansipix = "0.1.1"
 ```
 
 ### Get an ANSI string
