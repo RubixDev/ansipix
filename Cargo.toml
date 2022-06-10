@@ -1,6 +1,6 @@
 [package]
 name = "ansipix"
-version = "0.1.2"
+version = "1.0.0"
 edition = "2021"
 authors = ["RubixDev"]
 license = "GPL-3.0-only"
@@ -12,4 +12,4 @@ categories = ["graphics"]
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-image = "0.23.14"
+image = "0.24.2"
