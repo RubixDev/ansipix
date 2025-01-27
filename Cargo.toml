@@ -1,10 +1,10 @@
 [package]
 name = "ansipix"
-version = "1.0.0"
+version = "2.0.0"
 edition = "2021"
 authors = ["RubixDev"]
 license = "GPL-3.0-only"
-description = "A rust library for converting images to ANSI strings to print in a terminal"
+description = "Convert images to ANSI strings to print in a terminal"
 repository = "https://github.com/RubixDev/ansipix"
 keywords = ["ansi", "terminal", "pixel", "image"]
 categories = ["graphics"]
@@ -12,4 +12,4 @@ categories = ["graphics"]
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-image = "0.24.2"
+image = "0.25.5"

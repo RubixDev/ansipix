@@ -1,26 +1,42 @@
 #![doc = include_str!("../README.md")]
 
-use image::{DynamicImage, GenericImageView};
-use std::path::PathBuf;
-
-pub use image::{imageops::FilterType, ImageFormat, ImageResult};
+use image::{imageops::FilterType, DynamicImage, GenericImageView};
 
 const TOP_HALF: &str = "\u{2580}";
 const BOTTOM_HALF: &str = "\u{2584}";
 
-/// Open an image and convert it to a `String`, with [ANSI escape sequences](https://en.wikipedia.org/wiki/ANSI_escape_code) for color, while specifying a filter for resizing
+/// Convert a [`DynamicImage`] to a [`String`] with [ANSI escape sequences](https://en.wikipedia.org/wiki/ANSI_escape_code).
 ///
 /// ## Params
-/// - `image: image::DynamicImage` - The image
-/// - `size: (usize, usize)` - The maximum size of the resized image in `(width, height)` notation
-/// - `alpha_threshold: u8` - Minimum alpha value of a pixel for it to be shown. `0` for no transparent background
-/// - `raw: bool` - Whether to print the escape sequences literal
-/// - `resize_filter: image::imageops::FilterType` - The filter to be used for resizing the image
+/// - `image`: [`DynamicImage`] - The image to convert.
+/// - `size`: `(usize, usize)` - The maximum size of the resized image as a `(width, height)` tuple.
+/// - `alpha_threshold`: [`u8`] - Minimum alpha value of a pixel for it to be shown. `0` for no transparent background.
+/// - `raw`: [`bool`] - Whether to escape the escape sequences.
 ///
 /// ## Returns
-/// A `String` with the image
-fn of_image_with_filter(
-    image: DynamicImage,
+/// A [`String`] containing the image.
+pub fn of_image(
+    image: &DynamicImage,
+    size: (usize, usize),
+    alpha_threshold: u8,
+    raw: bool,
+) -> String {
+    of_image_with_filter(image, size, alpha_threshold, raw, FilterType::Nearest)
+}
+
+/// Convert a [`DynamicImage`] to a [`String`] with [ANSI escape sequences](https://en.wikipedia.org/wiki/ANSI_escape_code) given a resize filter.
+///
+/// ## Params
+/// - `image`: [`DynamicImage`] - The image to convert.
+/// - `size`: `(usize, usize)` - The maximum size of the resized image as a `(width, height)` tuple.
+/// - `alpha_threshold`: [`u8`] - Minimum alpha value of a pixel for it to be shown. `0` for no transparent background.
+/// - `raw`: [`bool`] - Whether to escape the escape sequences.
+/// - `resize_filter`: [`FilterType`] - The filter to be used for resizing the image.
+///
+/// ## Returns
+/// A [`String`] containing the image.
+pub fn of_image_with_filter(
+    image: &DynamicImage,
     size: (usize, usize),
     alpha_threshold: u8,
     raw: bool,
@@ -83,154 +99,5 @@ fn of_image_with_filter(
         }
         out += "\n";
     }
-    return out;
-}
-
-/// Open an image and convert it to a `String`, with [ANSI escape sequences](https://en.wikipedia.org/wiki/ANSI_escape_code) for color
-///
-/// ## Params
-/// - `file: std::path::PathBuf` - The path to the image
-/// - `size: (usize, usize)` - The maximum size of the resized image in `(width, height)` notation
-/// - `alpha_threshold: u8` - Minimum alpha value of a pixel for it to be shown. `0` for no transparent background
-/// - `raw: bool` - Whether to print the escape sequences literal
-/// - `resize_filter: image::imageops::FilterType` - The filter to be used for resizing the image
-///
-/// ## Returns
-/// A `String` with the image when the specified `file` could be opened as an image, otherwise an `image::error::ImageError`
-pub fn of_image_file_with_filter(
-    file: PathBuf,
-    size: (usize, usize),
-    alpha_threshold: u8,
-    raw: bool,
-    resize_filter: FilterType,
-) -> ImageResult<String> {
-    Ok(of_image_with_filter(
-        image::open(file)?,
-        size,
-        alpha_threshold,
-        raw,
-        resize_filter,
-    ))
-}
-
-/// Open an image and convert it to a `String`, with [ANSI escape sequences](https://en.wikipedia.org/wiki/ANSI_escape_code) for color
-///
-/// ## Params
-/// - `file: std::path::PathBuf` - The path to the image
-/// - `size: (usize, usize)` - The maximum size of the resized image in `(width, height)` notation
-/// - `alpha_threshold: u8` - Minimum alpha value of a pixel for it to be shown. `0` for no transparent background
-/// - `raw: bool` - Whether to print the escape sequences literal
-///
-/// ## Returns
-/// A `String` with the image when the specified `file` could be opened as an image, otherwise an `image::error::ImageError`
-pub fn of_image_file(
-    file: PathBuf,
-    size: (usize, usize),
-    alpha_threshold: u8,
-    raw: bool,
-) -> ImageResult<String> {
-    of_image_file_with_filter(file, size, alpha_threshold, raw, FilterType::Nearest)
-}
-
-/// Open an image and convert it to a `String`, with [ANSI escape sequences](https://en.wikipedia.org/wiki/ANSI_escape_code) for color
-///
-/// ## Params
-/// - `buffer: &[u8]` - The bytes of the image
-/// - `size: (usize, usize)` - The maximum size of the resized image in `(width, height)` notation
-/// - `alpha_threshold: u8` - Minimum alpha value of a pixel for it to be shown. `0` for no transparent background
-/// - `raw: bool` - Whether to print the escape sequences literal
-/// - `resize_filter: image::imageops::FilterType` - The filter to be used for resizing the image
-///
-/// ## Returns
-/// A `String` with the image when the specified `buffer` could be read as an image and the format could be detected, otherwise an `image::error::ImageError`
-pub fn of_image_bytes_with_filter(
-    buffer: &[u8],
-    size: (usize, usize),
-    alpha_threshold: u8,
-    raw: bool,
-    resize_filter: FilterType,
-) -> ImageResult<String> {
-    Ok(of_image_with_filter(
-        image::load_from_memory(buffer)?,
-        size,
-        alpha_threshold,
-        raw,
-        resize_filter,
-    ))
-}
-
-/// Open an image and convert it to a `String`, with [ANSI escape sequences](https://en.wikipedia.org/wiki/ANSI_escape_code) for color
-///
-/// ## Params
-/// - `buffer: &[u8]` - The bytes of the image
-/// - `size: (usize, usize)` - The maximum size of the resized image in `(width, height)` notation
-/// - `alpha_threshold: u8` - Minimum alpha value of a pixel for it to be shown. `0` for no transparent background
-/// - `raw: bool` - Whether to print the escape sequences literal
-///
-/// ## Returns
-/// A `String` with the image when the specified `buffer` could be read as an image and the format could be detected, otherwise an `image::error::ImageError`
-pub fn of_image_bytes(
-    buffer: &[u8],
-    size: (usize, usize),
-    alpha_threshold: u8,
-    raw: bool,
-) -> ImageResult<String> {
-    of_image_bytes_with_filter(buffer, size, alpha_threshold, raw, FilterType::Nearest)
-}
-
-/// Open an image and convert it to a `String`, with [ANSI escape sequences](https://en.wikipedia.org/wiki/ANSI_escape_code) for color
-///
-/// ## Params
-/// - `buffer: &[u8]` - The bytes of the image
-/// - `size: (usize, usize)` - The maximum size of the resized image in `(width, height)` notation
-/// - `alpha_threshold: u8` - Minimum alpha value of a pixel for it to be shown. `0` for no transparent background
-/// - `raw: bool` - Whether to print the escape sequences literal
-/// - `resize_filter: image::imageops::FilterType` - The filter to be used for resizing the image
-/// - `format: image::ImageFormat` - The format of the given image
-///
-/// ## Returns
-/// A `String` with the image when the specified `buffer` could be read as an image, otherwise an `image::error::ImageError`
-pub fn of_image_bytes_with_filter_and_format(
-    buffer: &[u8],
-    size: (usize, usize),
-    alpha_threshold: u8,
-    raw: bool,
-    resize_filter: FilterType,
-    format: ImageFormat,
-) -> ImageResult<String> {
-    Ok(of_image_with_filter(
-        image::load_from_memory_with_format(buffer, format)?,
-        size,
-        alpha_threshold,
-        raw,
-        resize_filter,
-    ))
-}
-
-/// Open an image and convert it to a `String`, with [ANSI escape sequences](https://en.wikipedia.org/wiki/ANSI_escape_code) for color
-///
-/// ## Params
-/// - `buffer: &[u8]` - The bytes of the image
-/// - `size: (usize, usize)` - The maximum size of the resized image in `(width, height)` notation
-/// - `alpha_threshold: u8` - Minimum alpha value of a pixel for it to be shown. `0` for no transparent background
-/// - `raw: bool` - Whether to print the escape sequences literal
-/// - `format: image::ImageFormat` - The format of the given image
-///
-/// ## Returns
-/// A `String` with the image when the specified `buffer` could be read as an image, otherwise an `image::error::ImageError`
-pub fn of_image_bytes_with_format(
-    buffer: &[u8],
-    size: (usize, usize),
-    alpha_threshold: u8,
-    raw: bool,
-    format: ImageFormat,
-) -> ImageResult<String> {
-    of_image_bytes_with_filter_and_format(
-        buffer,
-        size,
-        alpha_threshold,
-        raw,
-        FilterType::Nearest,
-        format,
-    )
+    out
 }
